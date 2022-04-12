@@ -1,37 +1,30 @@
 import { Image, StyleSheet } from "react-native";
 import { Formik } from "formik";
-import { useNavigation } from "@react-navigation/native";
 import * as Yup from "yup";
-import { useState, useContext } from "react";
+import { useState } from "react";
 
 import Screen from "../components/Screen";
 import AppTextInput from "../components/AppTextInput";
 import ErrorText from "../components/ErrorText";
 import AppButton from "../components/AppButton";
 import authApi from "../api/auth";
-import jwtDecode from "jwt-decode";
-import AuthContext from "../auth/context";
-import authStorage from "../auth/storage";
+import useAuth from "../auth/useAuth";
 
 const validationSchema = Yup.object().shape({
     email: Yup.string().label("Email").email().required(),
     password: Yup.string().label("Password").min(5).required(),
 });
+
 export default function LoginScreen() {
-    const navigation = useNavigation();
     const [loginFailed, setLoginFailed] = useState(false);
-    const { user, setUser } = useContext(AuthContext);
+    const { login } = useAuth();
 
     const handleSubmit = async ({ email, password }) => {
         const result = await authApi.login(email, password);
-
         if (!result.ok) return setLoginFailed(true);
 
         setLoginFailed(false);
-        const user = jwtDecode(result.data);
-        setUser(user);
-
-        authStorage.storeToken(result.data);
+        login(result.data);
     };
 
     return (
