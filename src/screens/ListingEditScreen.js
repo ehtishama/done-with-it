@@ -11,7 +11,7 @@ import { useEffect, useState } from "react";
 import ImageInputList from "../components/ImageInputList";
 import listingsApi from "../api/listings";
 import ProgressModal from "../components/ProgressModal";
-import { KeyboardAvoidingView } from "react-native";
+import { ScrollView, View } from "react-native";
 
 const validationSchema = Yup.object().shape({
     title: Yup.string().min(4).required().label("Title"),
@@ -108,76 +108,81 @@ export default function ListingEditScreen() {
 
     return (
         <Screen>
-            <ProgressModal
-                progress={progress}
-                visible={uploading}
-                onDone={onFormSubmitted}
-            />
+            <ScrollView>
+                <ProgressModal
+                    progress={progress}
+                    visible={uploading}
+                    onDone={onFormSubmitted}
+                />
 
-            <ImageInputList imageUris={imageUris} onImageAdd={handleImageAdd} />
+                <ImageInputList
+                    imageUris={imageUris}
+                    onImageAdd={handleImageAdd}
+                />
 
-            <Formik
-                initialValues={{
-                    title: "",
-                    price: "",
-                    category: null,
-                    description: "",
-                }}
-                onSubmit={handleSubmit}
-                validationSchema={validationSchema}
-                validateOnBlur={false}
-                validateOnChange={false}
-            >
-                {({
-                    handleChange,
-                    handleSubmit,
-                    handleBlur,
-                    errors,
-                    setFieldValue,
-                    values,
-                }) => (
-                    <>
-                        <AppTextInput
-                            placeholder="Title"
-                            onChangeText={handleChange("title")}
-                            onBlur={handleBlur("title")}
-                            value={values.title}
-                        />
-                        <ErrorText>{errors.title}</ErrorText>
-                        <AppTextInput
-                            placeholder="Price"
-                            onChangeText={handleChange("price")}
-                            maxLength={8}
-                            keyboardType={"decimal-pad"}
-                            value={values.price}
-                        />
-                        <ErrorText>{errors.price}</ErrorText>
-                        <AppPicker
-                            iconName="apps"
-                            items={categories}
-                            placeholder={"Category"}
-                            selectedItem={values.category}
-                            onSelectItem={(item) =>
-                                setFieldValue("category", item)
-                            }
-                        />
-                        <ErrorText>{errors.category}</ErrorText>
-                        <AppTextInput
-                            placeholder="Description"
-                            onChangeText={handleChange("description")}
-                            multiline
-                            numberOfLines={2}
-                            value={values.description}
-                        />
-                        <ErrorText>{errors.description}</ErrorText>
-                        <AppButton
-                            title={"Post"}
-                            color={colors.primary}
-                            onPress={handleSubmit}
-                        />
-                    </>
-                )}
-            </Formik>
+                <Formik
+                    initialValues={{
+                        title: "",
+                        price: "",
+                        category: null,
+                        description: "",
+                    }}
+                    onSubmit={handleSubmit}
+                    validationSchema={validationSchema}
+                    validateOnBlur={false}
+                    validateOnChange={false}
+                >
+                    {({
+                        handleChange,
+                        handleSubmit,
+                        handleBlur,
+                        errors,
+                        setFieldValue,
+                        values,
+                    }) => (
+                        <>
+                            <AppTextInput
+                                placeholder="Title"
+                                onChangeText={handleChange("title")}
+                                onBlur={handleBlur("title")}
+                                value={values.title}
+                            />
+                            <ErrorText>{errors.title}</ErrorText>
+                            <AppTextInput
+                                placeholder="Price"
+                                onChangeText={handleChange("price")}
+                                maxLength={8}
+                                keyboardType={"decimal-pad"}
+                                value={values.price}
+                            />
+                            <ErrorText>{errors.price}</ErrorText>
+                            <AppPicker
+                                iconName="apps"
+                                items={categories}
+                                placeholder={"Category"}
+                                selectedItem={values.category}
+                                onSelectItem={(item) =>
+                                    setFieldValue("category", item)
+                                }
+                            />
+                            <ErrorText>{errors.category}</ErrorText>
+                            <AppTextInput
+                                placeholder="Description"
+                                onChangeText={handleChange("description")}
+                                multiline
+                                numberOfLines={2}
+                                value={values.description}
+                            />
+                            <ErrorText>{errors.description}</ErrorText>
+                            <AppButton
+                                title={"Post"}
+                                color={colors.primary}
+                                onPress={handleSubmit}
+                            />
+                        </>
+                    )}
+                </Formik>
+            </ScrollView>
         </Screen>
     );
 }
