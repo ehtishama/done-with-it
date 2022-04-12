@@ -1,6 +1,7 @@
 import * as Yup from "yup";
 import { Formik } from "formik";
 import { useState } from "react";
+import { ActivityIndicator } from "react-native";
 
 import AppButton from "../components/AppButton";
 import AppTextInput from "../components/AppTextInput";
@@ -9,6 +10,7 @@ import colors from "../config/colors";
 import ErrorText from "../components/ErrorText";
 import authApi from "../api/auth";
 import useAuth from "../auth/useAuth";
+import useApi from "../hooks/useApi";
 
 const validationSchema = Yup.object().shape({
     name: Yup.string().min(4).required().label("Name"),
@@ -20,15 +22,18 @@ export default function RegisterScreen() {
     const [registerError, setRegisterError] = useState(false);
     const { login: tokenAuth } = useAuth();
 
+    const registerApi = useApi(authApi.register);
+    const loginApi = useApi(authApi.login);
+
     const handleSubmit = async ({ name, email, password }, { resetForm }) => {
-        let result = await authApi.register(name, email, password);
+        let result = await registerApi.request(name, email, password);
 
         if (!result.ok) {
             setRegisterError(true);
             return;
         }
 
-        const { data: authToken } = await authApi.login(email, password);
+        const { data: authToken } = await loginApi.request(email, password);
         tokenAuth(authToken);
 
         resetForm();
@@ -78,6 +83,10 @@ export default function RegisterScreen() {
                             title={"Register"}
                             color={colors.secondary}
                             onPress={handleSubmit}
+                        />
+                        <ActivityIndicator
+                            size={"large"}
+                            color={colors.primary}
                         />
                     </>
                 )}
