@@ -10,7 +10,7 @@ export default function AccountNavigator() {
             <Stack.Screen
                 name={routes.ACCOUNT_TAB}
                 component={MyAccountScreen}
-                options={{ title: "Account" }}
+                options={{ title: "My Account" }}
             />
             <Stack.Screen name={routes.MESSAGES} component={MessagesScreen} />
         </Stack.Navigator>

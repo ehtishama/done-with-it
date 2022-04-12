@@ -2,6 +2,7 @@ import { createNativeStackNavigator } from "@react-navigation/native-stack";
 import ListingDetailsScreen from "../screens/ListingDetailsScreen";
 import ListingsScreen from "../screens/ListingsScreen";
 import routes from "./routes";
+
 const Stack = createNativeStackNavigator();
 
 export default function FeedNavigator() {
@@ -11,6 +12,10 @@ export default function FeedNavigator() {
             <Stack.Screen
                 name={routes.LISTING_DETAILS}
                 component={ListingDetailsScreen}
+                options={{
+                    headerShown: true,
+                    headerTitle: "Listing Details",
+                }}
             />
         </Stack.Navigator>
     );
