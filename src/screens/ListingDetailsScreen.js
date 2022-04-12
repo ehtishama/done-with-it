@@ -1,19 +1,18 @@
-import {View, StyleSheet, Text, Image} from "react-native";
+import { View, StyleSheet, Text, Image } from "react-native";
 import colors from "../config/colors";
 import ListItem from "../components/ListItem";
-import {useRoute} from "@react-navigation/native";
+import { useRoute } from "@react-navigation/native";
+import { useContext } from "react";
+import AuthContext from "../auth/context";
 
 export default function ListingDetailsScreen() {
-
-    const {params} = useRoute()
-    const {id, title, images, categoryId, userId, location, price} = params
+    const { params } = useRoute();
+    const { id, title, images, categoryId, userId, location, price } = params;
+    const { user } = useContext(AuthContext);
 
     return (
         <View>
-            <Image
-                style={styles.image}
-                source={{uri: images[0].url}}
-            />
+            <Image style={styles.image} source={{ uri: images[0].url }} />
             <View style={styles.container}>
                 <Text style={styles.title}>{title}</Text>
                 <Text style={styles.price}>${price}</Text>
@@ -21,8 +20,8 @@ export default function ListingDetailsScreen() {
             <ListItem
                 image={require("../../assets/ehtisham.png")}
                 style={styles.listingItem}
-                title={"Ehtisham UL Hassan"}
-                subTitle={"10K Listings"}
+                title={user.name}
+                subTitle={user.email}
             />
         </View>
     );
