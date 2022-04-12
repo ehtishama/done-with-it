@@ -9,6 +9,8 @@ import ErrorText from "../components/ErrorText";
 import AppButton from "../components/AppButton";
 import authApi from "../api/auth";
 import useAuth from "../auth/useAuth";
+import useApi from "../hooks/useApi";
+import AppAcitivtyIndicator from "../components/AppActivityIndicator";
 
 const validationSchema = Yup.object().shape({
     email: Yup.string().label("Email").email().required(),
@@ -18,9 +20,10 @@ const validationSchema = Yup.object().shape({
 export default function LoginScreen() {
     const [loginFailed, setLoginFailed] = useState(false);
     const { login } = useAuth();
+    const loginApi = useApi(authApi.login);
 
     const handleSubmit = async ({ email, password }) => {
-        const result = await authApi.login(email, password);
+        const result = await loginApi.request(email, password);
         if (!result.ok) return setLoginFailed(true);
 
         setLoginFailed(false);
@@ -28,45 +31,50 @@ export default function LoginScreen() {
     };
 
     return (
-        <Screen>
-            <Image
-                source={require("../../assets/logo-red.png")}
-                style={styles.logo}
-            />
+        <>
+            <AppAcitivtyIndicator visible={loginApi.loading} />
+            <Screen>
+                <Image
+                    source={require("../../assets/logo-red.png")}
+                    style={styles.logo}
+                />
 
-            <Formik
-                initialValues={{
-                    email: "",
-                    password: "",
-                }}
-                onSubmit={handleSubmit}
-                validationSchema={validationSchema}
-            >
-                {({ handleChange, errors, handleSubmit }) => (
-                    <>
-                        {loginFailed && (
-                            <ErrorText>Invalid email and/or password</ErrorText>
-                        )}
-                        <AppTextInput
-                            iconName={"email"}
-                            placeholder="Email"
-                            onChangeText={handleChange("email")}
-                            autoCapitalize={"none"}
-                        />
-                        <ErrorText>{errors.email}</ErrorText>
-                        <AppTextInput
-                            iconName={"account-lock"}
-                            placeholder="password"
-                            onChangeText={handleChange("password")}
-                            secureTextEntry
-                        />
-                        <ErrorText>{errors.password}</ErrorText>
+                <Formik
+                    initialValues={{
+                        email: "",
+                        password: "",
+                    }}
+                    onSubmit={handleSubmit}
+                    validationSchema={validationSchema}
+                >
+                    {({ handleChange, errors, handleSubmit }) => (
+                        <>
+                            {loginFailed && (
+                                <ErrorText>
+                                    Invalid email and/or password
+                                </ErrorText>
+                            )}
+                            <AppTextInput
+                                iconName={"email"}
+                                placeholder="Email"
+                                onChangeText={handleChange("email")}
+                                autoCapitalize={"none"}
+                            />
+                            <ErrorText>{errors.email}</ErrorText>
+                            <AppTextInput
+                                iconName={"account-lock"}
+                                placeholder="password"
+                                onChangeText={handleChange("password")}
+                                secureTextEntry
+                            />
+                            <ErrorText>{errors.password}</ErrorText>
 
-                        <AppButton title={"Login"} onPress={handleSubmit} />
-                    </>
-                )}
-            </Formik>
-        </Screen>
+                            <AppButton title={"Login"} onPress={handleSubmit} />
+                        </>
+                    )}
+                </Formik>
+            </Screen>
+        </>
     );
 }
 
