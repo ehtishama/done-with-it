@@ -7,18 +7,22 @@ export default function ProgressModal({ progress, visible, onDone }) {
     return (
         <Modal visible={visible}>
             <View style={styles.container}>
-                <AnimatedLottieView
-                    autoPlay
-                    loop
-                    source={require("../../assets/animations/done.json")}
-                    style={styles.animation}
-                />
-                <ProgressBar
-                    progress={progress}
-                    width={200}
-                    animated
-                    color={colors.primary}
-                />
+                {progress >= 1 ? (
+                    <AnimatedLottieView
+                        autoPlay
+                        loop={false}
+                        source={require("../../assets/animations/done.json")}
+                        style={styles.animation}
+                        onAnimationFinish={onDone}
+                    />
+                ) : (
+                    <ProgressBar
+                        animated
+                        progress={progress}
+                        width={200}
+                        color={colors.primary}
+                    />
+                )}
             </View>
         </Modal>
     );
@@ -32,6 +36,5 @@ const styles = StyleSheet.create({
     },
     animation: {
         width: 150,
-        backgroundColor: "gray",
     },
 });

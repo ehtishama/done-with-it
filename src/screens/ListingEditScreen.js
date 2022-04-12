@@ -11,6 +11,7 @@ import { useEffect, useState } from "react";
 import ImageInputList from "../components/ImageInputList";
 import listingsApi from "../api/listings";
 import ProgressModal from "../components/ProgressModal";
+import { KeyboardAvoidingView } from "react-native";
 
 const validationSchema = Yup.object().shape({
     title: Yup.string().min(4).required().label("Title"),
@@ -81,7 +82,7 @@ export default function ListingEditScreen() {
         setImageUris([...imageUris, newImageUri]);
     };
 
-    const handleSubmit = async (values) => {
+    const handleSubmit = async (values, { resetForm }) => {
         setUploading(true);
 
         const result = await listingsApi.postListing(
@@ -89,12 +90,16 @@ export default function ListingEditScreen() {
             setProgress
         );
 
-        setUploading(false);
-
         if (!result.ok) return alert("Upload failed");
+        console.log("Resetting form");
+        resetForm();
+    };
+
+    const onFormSubmitted = () => {
+        setUploading(false);
+        setProgress(0);
 
         // TODO:: reset form
-        alert("Successfully uploaded");
     };
 
     useEffect(() => {
@@ -103,7 +108,12 @@ export default function ListingEditScreen() {
 
     return (
         <Screen>
-            <ProgressModal progress={progress} visible={true} />
+            <ProgressModal
+                progress={progress}
+                visible={uploading}
+                onDone={onFormSubmitted}
+            />
+
             <ImageInputList imageUris={imageUris} onImageAdd={handleImageAdd} />
 
             <Formik
@@ -115,6 +125,8 @@ export default function ListingEditScreen() {
                 }}
                 onSubmit={handleSubmit}
                 validationSchema={validationSchema}
+                validateOnBlur={false}
+                validateOnChange={false}
             >
                 {({
                     handleChange,
@@ -129,6 +141,7 @@ export default function ListingEditScreen() {
                             placeholder="Title"
                             onChangeText={handleChange("title")}
                             onBlur={handleBlur("title")}
+                            value={values.title}
                         />
                         <ErrorText>{errors.title}</ErrorText>
                         <AppTextInput
@@ -136,6 +149,7 @@ export default function ListingEditScreen() {
                             onChangeText={handleChange("price")}
                             maxLength={8}
                             keyboardType={"decimal-pad"}
+                            value={values.price}
                         />
                         <ErrorText>{errors.price}</ErrorText>
                         <AppPicker
@@ -143,11 +157,9 @@ export default function ListingEditScreen() {
                             items={categories}
                             placeholder={"Category"}
                             selectedItem={values.category}
-                            onSelectItem={(item) => {
-                                console.log(item);
-                                console.log(values);
-                                setFieldValue("category", item);
-                            }}
+                            onSelectItem={(item) =>
+                                setFieldValue("category", item)
+                            }
                         />
                         <ErrorText>{errors.category}</ErrorText>
                         <AppTextInput
@@ -155,6 +167,7 @@ export default function ListingEditScreen() {
                             onChangeText={handleChange("description")}
                             multiline
                             numberOfLines={2}
+                            value={values.description}
                         />
                         <ErrorText>{errors.description}</ErrorText>
                         <AppButton
