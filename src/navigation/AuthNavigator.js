@@ -6,9 +6,11 @@ import routes from "./routes";
 
 const Stack = createNativeStackNavigator();
 export default function AuthNavigator() {
-    return <Stack.Navigator>
-        <Stack.Screen name={routes.LOGIN} component={LoginScreen} />
-        <Stack.Screen name={routes.REGISTER} component={RegisterScreen} />
-        <Stack.Screen name={routes.WELCOME} component={WelcomeScreen} />
-    </Stack.Navigator>;
+    return (
+        <Stack.Navigator screenOptions={{ headerShown: false }}>
+            <Stack.Screen name={routes.WELCOME} component={WelcomeScreen} />
+            <Stack.Screen name={routes.LOGIN} component={LoginScreen} />
+            <Stack.Screen name={routes.REGISTER} component={RegisterScreen} />
+        </Stack.Navigator>
+    );
 }
