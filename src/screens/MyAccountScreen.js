@@ -9,6 +9,7 @@ import ListSeparator from "../components/ListSeparator";
 import routes from "../navigation/routes";
 import { useNavigation } from "@react-navigation/native";
 import AuthContext from "../auth/context";
+import authStorage from "../auth/storage";
 
 const menuItems = [
     {
@@ -32,6 +33,7 @@ export default function MyAccountScreen() {
 
     const handleLogout = () => {
         setUser(null);
+        authStorage.removeToken();
     };
 
     return (
