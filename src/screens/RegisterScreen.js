@@ -1,7 +1,6 @@
 import * as Yup from "yup";
 import { Formik } from "formik";
 import { useState } from "react";
-import { Text, ActivityIndicator } from "react-native";
 
 import AppButton from "../components/AppButton";
 import AppTextInput from "../components/AppTextInput";
@@ -46,11 +45,13 @@ export default function RegisterScreen() {
             <AppAcitivtyIndicator
                 visible={loginApi.loading || registerApi.loading}
             />
-            <Screen>
+            <Screen scrollable>
                 <Formik
                     initialValues={{ name: "", email: "", password: "" }}
                     onSubmit={handleSubmit}
                     validationSchema={validationSchema}
+                    validateOnBlur={false}
+                    validateOnChange={false}
                 >
                     {({ handleChange, handleSubmit, errors, values }) => (
                         <>

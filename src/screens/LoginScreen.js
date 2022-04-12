@@ -1,4 +1,4 @@
-import { Image, StyleSheet } from "react-native";
+import { Image, StyleSheet, ScrollView } from "react-native";
 import { Formik } from "formik";
 import * as Yup from "yup";
 import { useState } from "react";
@@ -33,7 +33,8 @@ export default function LoginScreen() {
     return (
         <>
             <AppAcitivtyIndicator visible={loginApi.loading} />
-            <Screen>
+
+            <Screen scrollable>
                 <Image
                     source={require("../../assets/logo-red.png")}
                     style={styles.logo}
@@ -46,6 +47,8 @@ export default function LoginScreen() {
                     }}
                     onSubmit={handleSubmit}
                     validationSchema={validationSchema}
+                    validateOnBlur={false}
+                    validateOnChange={false}
                 >
                     {({ handleChange, errors, handleSubmit }) => (
                         <>

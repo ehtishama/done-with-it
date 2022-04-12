@@ -93,13 +93,12 @@ export default function ListingEditScreen() {
         if (!result.ok) return alert("Upload failed");
         console.log("Resetting form");
         resetForm();
+        setImageUris([]);
     };
 
     const onFormSubmitted = () => {
         setUploading(false);
         setProgress(0);
-
-        // TODO:: reset form
     };
 
     useEffect(() => {

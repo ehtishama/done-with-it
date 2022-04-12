@@ -7,13 +7,15 @@ import {
 } from "react-native";
 import colors from "../config/colors";
 
-export default function Screen({ children, style }) {
+export default function Screen({ children, style, scrollable }) {
     return (
         <SafeAreaView style={styles.screen}>
             <StatusBar />
-            <ScrollView>
+            {scrollable ? (
+                <ScrollView>{children}</ScrollView>
+            ) : (
                 <View style={style}>{children}</View>
-            </ScrollView>
+            )}
         </SafeAreaView>
     );
 }
